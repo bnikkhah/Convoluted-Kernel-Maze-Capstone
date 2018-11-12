@@ -59,3 +59,12 @@ class User:
                 except ValueError:
                     print("That's not a number! Try again.")
         return swag_list, swag_rate
+
+    def mow_rate(self):
+        while True:
+            try:
+                mow_rate = int(input("Mow rate: "))
+                break
+            except ValueError:
+                print("That's not a number! Try again.")
+        return mow_rate

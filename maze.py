@@ -9,12 +9,12 @@ class Maze:
         self.swag = swag
         self.swag_rate = swag_rate
 
-    def build_maze(self):
+    def build_maze(self, mow_rate):
         grid = [["wall" for row in range(self.n)] for col in range(self.m)]
         start_i = randint(0, self.m-1)
         start_j = randint(0, self.n-1)
         grid[start_i][start_j] = "start"
-        self.mow(grid, start_i, start_j)
+        self.mow(grid, start_i, start_j, mow_rate)
         self.explore_maze(grid, start_i, start_j)
         return grid
 
@@ -57,50 +57,59 @@ class Maze:
                 printable_row += char
             print(printable_row)
 
-    def mow(self, grid, i, j):
+    def mow(self, grid, i, j, mow_rate):
         directions = ["U", "D", "L", "R"]
         while (len(directions) > 0):
             directions_index = randint(0, len(directions)-1)
             direction = directions.pop(directions_index)
             if direction == "U":
-                if i-2 < 0:
+                if i-mow_rate < 0:
                     continue
                 else:
-                    if grid[i-2][j] == "wall":
-                        grid[i-1][j] = "empty"
-                        grid[i-2][j] = "empty"
-                        self.mow(grid, i-2, j)
+                    if grid[i-mow_rate][j] == "wall":
+                        counter = 1
+                        while counter < mow_rate:
+                            grid[i-counter][j] = "empty"
+                            counter += 1
+                        self.mow(grid, i-mow_rate, j, mow_rate)
             elif direction == "D":
-                if i+2 >= len(grid):
+                if i+mow_rate >= len(grid):
                     continue
                 else:
-                    if grid[i+2][j] == "wall":
-                        grid[i+1][j] = "empty"
-                        grid[i+2][j] = "empty"
-                        self.mow(grid, i+2, j)
+                    if grid[i+mow_rate][j] == "wall":
+                        counter = 1
+                        while counter <= mow_rate:
+                            grid[i+counter][j] = "empty"
+                            counter += 1
+                        self.mow(grid, i+mow_rate, j, mow_rate)
             elif direction == "L":
-                if j-2 < 0:
+                if j-mow_rate < 0:
                     continue
                 else:
-                    if grid[i][j-2] == "wall":
-                        grid[i][j-1] = "empty"
-                        grid[i][j-2] = "empty"
-                        self.mow(grid, i, j-2)
+                    if grid[i][j-mow_rate] == "wall":
+                        counter = 1
+                        while counter <= mow_rate:
+                            grid[i][j-counter] = "empty"
+                            counter += 1
+                        self.mow(grid, i, j-mow_rate, mow_rate)
             elif direction == "R":
-                if j+2 >= len(grid[0]):
+                if j+mow_rate >= len(grid[0]):
                     continue
                 else:
-                    if grid[i][j+2] == "wall":
-                        grid[i][j+1] = "empty"
-                        grid[i][j+2] = "empty"
-                        self.mow(grid, i, j+2)
+                    if grid[i][j+mow_rate] == "wall":
+                        counter = 1
+                        while counter <= mow_rate:
+                            grid[i][j+counter] = "empty"
+                            counter += 1
+                        self.mow(grid, i, j+mow_rate, mow_rate)
 
 
 user = User()
 row, col = user.row_and_column()
+mow_rate = user.mow_rate()
 swag_list, swag_rate = user.swag()
-print("Defining a maze with parameters:\n\tRows: {0}\n\tColumns: {1}\n\tSwag List: {2}\n\tSwag Rate: {3}".format(row, col, swag_list, swag_rate))
+print("Defining a maze with parameters:\n\tRows: {0}\n\tColumns: {1}\n\tMow rate: {2}\n\tSwag List: {3}\n\tSwag Rate: 1/{4}".format(row, col, mow_rate, swag_list, swag_rate))
 maze = Maze(row, col, swag_list, swag_rate)
-grid = maze.build_maze()
+grid = maze.build_maze(mow_rate)
 maze.print_maze(grid)
 
