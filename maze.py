@@ -1,6 +1,5 @@
 from random import randint
 from user import User
-from a_star import AStar
 from collections import defaultdict, deque
 from heapq import heappush, heappop
 
@@ -67,7 +66,7 @@ class Maze:
                 if  tentative_g_score < gscore.get(neighbor, 0) or neighbor not in [i[1] for i in oheap]:
                     came_from[neighbor] = current
                     gscore[neighbor] = tentative_g_score
-                    fscore[neighbor] = tentative_g_score + self.heuristic(neighbor, goal)
+                    fscore[neighbor] = tentative_g_score + self.heuristic(neighbor, end)
                     heappush(oheap, (fscore[neighbor], neighbor))
         return "no endpoint found"
 
