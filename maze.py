@@ -1,12 +1,15 @@
 from random import randint
 from user import User
+from a_star import AStar
+from collections import defaultdict, deque
+from heapq import heappush, heappop
 
 class Maze:
 
-    def __init__(self, m, n, swag, swag_rate):
+    def __init__(self, m, n, swag_items, swag_rate):
         self.m = m
         self.n = n
-        self.swag = swag
+        self.swag_items = swag_items
         self.swag_rate = swag_rate
 
     def build_maze(self, mow_rate):
@@ -15,8 +18,58 @@ class Maze:
         start_j = randint(0, self.n-1)
         grid[start_i][start_j] = "start"
         self.mow(grid, start_i, start_j, mow_rate)
-        self.explore_maze(grid, start_i, start_j)
+        end_i, end_j = self.explore_maze(grid, start_i, start_j)
+        self.astar(grid, (start_i, start_j), (end_i, end_j))
         return grid
+
+    def heuristic(self, a, b):
+        return (b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2
+
+    def astar(self, grid, start, end):
+        neighbors = [(0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,1),(-1,-1)]
+        close_set = set()
+        came_from = {}
+        gscore = {start:0}
+        fscore = {start:self.heuristic(start, end)}
+        oheap = []
+        heappush(oheap, (fscore[start], start))
+        swag_collection = defaultdict(int)
+        while oheap:
+            current = heappop(oheap)[1]
+            if current == end:
+                data = []
+                while current in came_from:
+                    i, j = current
+                    if grid[i][j] != "end" and grid[i][j] not in self.swag_items:
+                        grid[i][j] = "."
+                    elif grid[i][j] in self.swag_items:
+                        swag_collection[grid[i][j]] += 1
+                    data.insert(0, current)
+                    current = came_from[current]
+                print("Collected swags:")
+                for key, value in swag_collection.items() :
+                    print("\t{0}: {1}".format(key, value))
+                return data
+            close_set.add(current)
+            for i, j in neighbors:
+                neighbor = current[0] + i, current[1] + j
+                tentative_g_score = gscore[current] + self.heuristic(current, neighbor)
+                if 0 <= neighbor[0] < len(grid[0]):
+                    if 0 <= neighbor[1] < len(grid[1]):
+                        if grid[neighbor[0]][neighbor[1]] == "wall":
+                            continue
+                    else:
+                        continue
+                else:
+                    continue
+                if neighbor in close_set and tentative_g_score >= gscore.get(neighbor, 0):
+                    continue
+                if  tentative_g_score < gscore.get(neighbor, 0) or neighbor not in [i[1] for i in oheap]:
+                    came_from[neighbor] = current
+                    gscore[neighbor] = tentative_g_score
+                    fscore[neighbor] = tentative_g_score + self.heuristic(neighbor, goal)
+                    heappush(oheap, (fscore[neighbor], neighbor))
+        return "no endpoint found"
 
     def explore_maze(self, grid, start_i, start_j):
         grid_copy = [row[:] for row in grid]
@@ -25,7 +78,7 @@ class Maze:
         while bfs_queue:
             i, j = bfs_queue.pop(0)
             if grid[i][j] != "start" and randint(1, self.swag_rate) == 1:
-                grid[i][j] = self.swag[randint(0, len(self.swag)-1)]
+                grid[i][j] = self.swag_items[randint(0, len(self.swag_items)-1)]
             grid_copy[i][j] = "visited"
             for direction in directions:
                 explore_i = i
@@ -43,6 +96,7 @@ class Maze:
                 elif grid_copy[explore_i][explore_j] != "visited" and grid_copy[explore_i][explore_j] != "wall":
                     bfs_queue.append([explore_i, explore_j])
         grid[i][j] = "end"
+        return i, j
 
     def print_maze(self, grid):
         for row in grid:
@@ -112,4 +166,3 @@ print("Defining a maze with parameters:\n\tRows: {0}\n\tColumns: {1}\n\tMow rate
 maze = Maze(row, col, swag_list, swag_rate)
 grid = maze.build_maze(mow_rate)
 maze.print_maze(grid)
-
