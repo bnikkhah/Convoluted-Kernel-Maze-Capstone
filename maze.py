@@ -53,8 +53,8 @@ class Maze:
             for i, j in neighbors:
                 neighbor = current[0] + i, current[1] + j
                 tentative_g_score = gscore[current] + self.heuristic(current, neighbor)
-                if 0 <= neighbor[0] < len(grid[0]):
-                    if 0 <= neighbor[1] < len(grid[1]):
+                if 0 <= neighbor[0] < len(grid):
+                    if 0 <= neighbor[1] < len(grid[0]):
                         if grid[neighbor[0]][neighbor[1]] == "wall":
                             continue
                     else:
