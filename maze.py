@@ -103,6 +103,10 @@ class Maze:
             for cell in row:
                 if cell == "wall":
                     char = "|"
+                elif cell == "start":
+                    char = "S"
+                elif cell == "end":
+                    char = "E"
                 elif cell == "empty":
                     char = " "
                 else:
@@ -158,6 +162,7 @@ class Maze:
 
 
 user = User()
+user.intro()
 row, col = user.row_and_column()
 mow_rate = user.mow_rate()
 swag_list, swag_rate = user.swag()

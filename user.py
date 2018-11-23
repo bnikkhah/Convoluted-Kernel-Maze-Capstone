@@ -5,6 +5,23 @@ class User:
     def __init__(self):
         pass
 
+    def intro(self):
+        print("\nWelcome to the Convoluted Kernel Maze Builder and Pathfinder")
+        print("This is a capstone project on Codecademy for the course Computer Science Basics: Algorithms")
+        print("Author: Behnam Nikkhah\n")
+        print("Terms:")
+        print("\t'S' represents the start of the maze")
+        print("\t'E' represents the end of the maze")
+        print("\tRows: The amount of rows for the maze")
+        print("\tColumns: The amount of columns for the maze")
+        print("\tMow rate: Higher rate = more walls; Lower rate = less walls (Recommended: 2)")
+        print("\tSwag List: Props to be laid out in the maze")
+        print("\t\tNote: If custom, please use a swag item that does start with an 's' (reserved for 'start')")
+        print("\tSwag Rate: How often should a swag item appear. Higher rate = less chance; Lower Rate = more chance\n")
+        print("Pathfinding:")
+        print("\tEach '.' represents a movement")
+        print("\tThe pathfinding algorithm is based upon the A* algorithm\n")
+
     def row_and_column(self):
         while True:
             maze_choice = input("Random maze or Custom?\n\t'r' for random\n\t'c' for Custom\n")
@@ -66,5 +83,7 @@ class User:
                 mow_rate = int(input("Mow rate: "))
                 break
             except ValueError:
+                if not mow_rate:
+                    print("enter key pressed")
                 print("That's not a number! Try again.")
         return mow_rate
