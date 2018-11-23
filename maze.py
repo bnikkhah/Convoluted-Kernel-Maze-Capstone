@@ -40,10 +40,10 @@ class Maze:
                 data = []
                 while current in came_from:
                     i, j = current
-                    if grid[i][j] != "end" and grid[i][j] not in self.swag_items:
+                    if grid[i][j] != "end":
+                        if grid[i][j] in self.swag_items:
+                            swag_collection[grid[i][j]] += 1
                         grid[i][j] = "."
-                    elif grid[i][j] in self.swag_items:
-                        swag_collection[grid[i][j]] += 1
                     data.insert(0, current)
                     current = came_from[current]
                 if swag_collection:
