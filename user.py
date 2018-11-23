@@ -20,6 +20,7 @@ class User:
         print("\tSwag Rate: How often should a swag item appear. Higher rate = less chance; Lower Rate = more chance\n")
         print("Pathfinding:")
         print("\tEach '.' represents a movement")
+        print("\tIf the pathfinder finds the opportunity, it will go diagonally in order to attain the shortest path (greedy algorithm)")
         print("\tThe pathfinding algorithm is based upon the A* algorithm\n")
 
     def row_and_column(self):
@@ -80,7 +81,7 @@ class User:
     def mow_rate(self):
         while True:
             try:
-                mow_rate = int(input("Mow rate: "))
+                mow_rate = int(input("Mow rate (Recommended: 2): "))
                 break
             except ValueError:
                 if not mow_rate:

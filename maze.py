@@ -2,6 +2,7 @@ from random import randint
 from user import User
 from collections import defaultdict, deque
 from heapq import heappush, heappop
+import operator
 
 class Maze:
 
@@ -45,9 +46,12 @@ class Maze:
                         swag_collection[grid[i][j]] += 1
                     data.insert(0, current)
                     current = came_from[current]
-                print("Collected swags:")
-                for key, value in swag_collection.items() :
-                    print("\t{0}: {1}".format(key, value))
+                if swag_collection:
+                    print("Collected swags:")
+                    for key, value in sorted(swag_collection.items(), key=operator.itemgetter(1)) :
+                        print("\t{0}: {1}".format(key, value))
+                else:
+                    print("No swag items were collected!")
                 return data
             close_set.add(current)
             for i, j in neighbors:
