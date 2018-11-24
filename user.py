@@ -84,7 +84,5 @@ class User:
                 mow_rate = int(input("Mow rate (Recommended: 2): "))
                 break
             except ValueError:
-                if not mow_rate:
-                    print("enter key pressed")
                 print("That's not a number! Try again.")
         return mow_rate

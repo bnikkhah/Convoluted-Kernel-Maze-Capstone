@@ -47,7 +47,7 @@ class Maze:
                     data.insert(0, current)
                     current = came_from[current]
                 if swag_collection:
-                    print("Collected swags:")
+                    print("Collected swags (sorted):")
                     for key, value in sorted(swag_collection.items(), key=operator.itemgetter(1)) :
                         print("\t{0}: {1}".format(key, value))
                 else:
